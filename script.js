@@ -118,14 +118,21 @@ onAuthStateChanged(auth, async (user) => {
 
 // ログインボタン
 if (loginBtn) {
-    loginBtn.onclick = async () => {
-        try {
-            const result = await signInWithPopup(auth, provider);
-            console.log("ログイン成功:", result.user);
-        } catch (error) {
-            console.error("ログインエラーの詳細:", error);
-            alert(`ログイン失敗: ${error.message} (${error.code})`);
-        }
+    loginBtn.onclick = () => {
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                console.log("ログイン成功:", result.user);
+            })
+            .catch((error) => {
+                console.error("ログインエラー:", error);      
+                
+                if (error.code === 'auth/popup-blocked') {
+                    alert("ポップアップがブロックされたため、画面を切り替えてログインします。");
+                    signInWithRedirect(auth, provider);
+                } else {
+                    alert(`ログイン失敗: ${error.message}`);
+                }
+            });
     };
 }
 
