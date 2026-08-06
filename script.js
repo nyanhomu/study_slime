@@ -19,9 +19,10 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Firebase 設定情報
+
 const firebaseConfig = {
     apiKey: "AIzaSyBmAg0HarEY_wtcBXHBMoF1jWJOyQFHAHQ",
-    authDomain: "study-80bcf.firebaseapp.com",
+    authDomain: "study-80bcf.firebaseapp.com", 
     projectId: "study-80bcf",
     storageBucket: "study-80bcf.firebasestorage.app",
     messagingSenderId: "270819585587",
@@ -30,6 +31,7 @@ const firebaseConfig = {
 };
 
 // Firebase 初期化
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
