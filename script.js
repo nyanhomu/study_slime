@@ -39,7 +39,7 @@ const provider = new GoogleAuthProvider();
 let currentUser = null; // ログイン中のユーザーオブジェクト
 
 // ===================================
-// 2. DOM要素の取得
+//DOM要素の取得
 // ===================================
 const timeDisplay = document.getElementById("timer");
 const toggleBtn = document.getElementById("toggleButton");
@@ -77,15 +77,26 @@ let barChart = null;
 let currentViewDate = new Date(); 
 
 // ===================================
-// 3. ログイン / 認証処理
+// ログイン / 認証処理
 // ===================================
+getRedirectResult(auth)
+    .then((result) => {
+        if (result) {
+            console.log("リダイレクトログイン成功:", result.user);
+        }
+    })
+    .catch((error) => {
+        console.error("リダイレクトログインエラー:", error);
+        alert(`ログインエラー: ${error.message}`);
+    });
+
 if (loginBtn) {
     loginBtn.onclick = async () => {
         try {
-            await signInWithPopup(auth, provider);
+            await signInWithRedirect(auth, provider);
         } catch (error) {
-            console.error("ログインエラー:", error);
-            alert("ログインに失敗しました。");
+            console.error("ログイン開始エラー:", error);
+            alert("ログイン画面への遷移に失敗しました。");
         }
     };
 }
@@ -124,7 +135,7 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 // ===================================
-// 4. データ管理（Local & Cloud）
+// データ管理（Local & Cloud）
 // ===================================
 
 // ローカルから読み込み
@@ -233,7 +244,7 @@ function updateUIAll() {
 }
 
 // ===================================
-// 5. 画面初期化イベント
+// 画面初期化イベント
 // ===================================
 window.addEventListener("load", () => {
     loadUserDataFromLocal();
@@ -264,7 +275,7 @@ function updateGaugeDisplay() {
 }
 
 // ===================================
-// 6. 目標設定モーダル
+// 目標設定モーダル
 // ===================================
 const openTargetBtn = document.getElementById("openTargetBtn");
 if (openTargetBtn) {
@@ -345,7 +356,7 @@ if (closeTarget) {
 }
 
 // ===================================
-// 7. タイマー処理
+// タイマー処理
 // ===================================
 function updateDisplay(time) {
     const minutes = Math.floor(time / 60000);
@@ -415,7 +426,7 @@ if (finishBtn) {
 }
 
 // ===================================
-// 8. グラフ・カレンダー描画
+// グラフ・カレンダー描画
 // ===================================
 function drawRadarChart() {
     const canvas = document.getElementById("subjectRadarChart");
@@ -584,7 +595,7 @@ function updateSlimeImage() {
 }
 
 // ===================================
-// 9. AI プランナー (Groq API)
+//AI プランナー (Groq API)
 // ===================================
 if (openAiBtn) {
     openAiBtn.onclick = () => { aiModal.style.display = "block"; };
@@ -615,7 +626,7 @@ if (generatePlanBtn) {
 
 【出力フォーマット】
 1. 【現状分析】（現在の成長ぶりや偏りについての評価）
-2. 🎯 【明日〜今週のおすすめプラン】（具体的にどの教科を何分やると良いか）
+2. 【明日〜今週のおすすめプラン】（具体的にどの教科を何分やると良いか）
 `;
 
         try {
