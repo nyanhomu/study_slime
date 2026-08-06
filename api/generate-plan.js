@@ -1,5 +1,3 @@
-// api/generate-plan.js
-
 export default async function handler(req, res) {
     // POSTリクエスト以外は拒否
     if (req.method !== 'POST') {
