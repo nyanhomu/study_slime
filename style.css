@@ -1,0 +1,248 @@
+/* 基本設定 */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    font-family: sans-serif;
+    overflow: hidden;
+}
+
+#app {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+.background {
+    position: absolute;
+    inset: 0;
+    background-image: url('images/草原.png');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+}
+
+
+.grid-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr 180px; 
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    z-index: 10;
+}
+
+.grid-left, .grid-center, .grid-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.main-screen {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 40px;
+    border-radius: 30px;
+    backdrop-filter: blur(5px);
+}
+
+#timer {
+    font-size: 6rem;
+    font-weight: bold;
+    margin: 20px 0;
+    font-family: monospace;
+    color: #333;
+}
+
+
+#sidebar-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#level-display-top-right {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, #ff9800, #f44336);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    border: 4px solid white;
+}
+
+#right-bar-container {
+    width: 80px;
+    height: 60vh;
+    background: rgba(255, 255, 255, 0.3);
+    border: 4px solid white;
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#gauge {
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(to top, #ff9800, #ffeb3b);
+    transition: height 0.5s ease-out;
+}
+
+#gaugeText {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    bottom: 10px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: #333;
+}
+
+
+.button-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+#toggleButton, #finishButton {
+    font-size: 1.5rem;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    color: white;
+}
+
+#toggleButton { background-color: #4CAF50; }
+#toggleButton.stop { background-color: #d9534f; }
+#finishButton { background-color: #0275db; }
+
+
+#radar-container {
+    width: 240px;
+    height: 240px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 10px;
+}
+
+#slime {
+    position: fixed;
+    right: 200px;
+    bottom: 20px;
+    width: 250px;
+    z-index: 20;
+    pointer-events: none;
+}
+
+/* モーダル */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+}
+.modal-content {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    width: 80%;
+    max-width: 500px;
+    max-height: 85vh; 
+    overflow-y: auto;
+}
+
+.calendar-day {
+    background: #f9f9f9;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    position: relative;
+    border: 1px solid #eee;
+}
+.calendar-weekday {
+    font-weight: bold;
+    text-align: center;
+    padding: 5px 0;
+    font-size: 0.7rem;
+    color: #666;
+}
+.has-study-data {
+    background-color: #e8f5e9; 
+}
+.study-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    margin-top: 2px;
+}
+.today-mark {
+    border: 2px solid #ff9800;
+}
+
+
+
+#openAiBtn {
+    transition: all 0.2s ease;
+}
+
+#openAiBtn:hover {
+    background: #e1bee7 !important;
+    transform: translateY(-1px);
+}
+
+#generatePlanBtn {
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(168, 85, 247, 0.3);
+}
+
+#generatePlanBtn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(168, 85, 247, 0.4);
+}
+
+#generatePlanBtn:disabled {
+    background: #ccc !important;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+
+#aiPlanResult::-webkit-scrollbar {
+    width: 6px;
+}
+
+#aiPlanResult::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+#aiPlanResult::-webkit-scrollbar-thumb {
+    background: #c084fc;
+    border-radius: 10px;
+}
+
+#aiPlanResult::-webkit-scrollbar-thumb:hover {
+    background: #a855f7;
+}

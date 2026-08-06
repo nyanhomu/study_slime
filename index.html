@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>勉強スライム - 学習ストップウォッチ</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+
+<body>
+    <div id="app">
+        <div class="background"></div>
+        
+        <div id="auth-container" style="text-align: right; padding: 10px; position: relative; z-index: 100;">
+            <div id="user-info" style="display: none; align-items: center; justify-content: flex-end; gap: 10px;">
+                <img id="user-icon" style="width: 32px; height: 32px; border-radius: 50%;">
+                <span id="user-name" style="font-weight: bold; font-size: 0.9rem;"></span>
+                <button id="logoutBtn" style="padding: 5px 10px; cursor: pointer;">ログアウト</button>
+            </div>
+            <button id="loginBtn" style="padding: 8px 15px; background: #4285F4; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                🔑 Googleでログイン
+            </button>
+        </div>
+
+        <div class="grid-layout">
+            <div class="grid-left">
+                <div id="radar-container">
+                    <canvas id="subjectRadarChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid-center">
+                <div class="main-screen">
+                    <div id="subject-container">
+                        <label>教科：</label>
+                        <select id="subjectSelect"></select>
+                        <button id="openTargetBtn" style="margin-left:10px; padding: 5px 10px; cursor:pointer; border-radius:5px; border:1px solid #ccc; background: #fff;">目標設定</button>
+                        <button id="openAiBtn" style="margin-left:5px; padding: 5px 10px; cursor:pointer; border-radius:5px; border:1px solid #7b1fa2; background: #f3e5f5; color: #7b1fa2; font-weight: bold;">🤖 AIプラン</button>
+                    </div>
+
+                    <div id="targetModal" class="modal">
+                        <div class="modal-content">
+                            <span id="closeTarget" style="cursor:pointer; float:right; font-size: 24px;">&times;</span>
+                            <h2>目標と教科の管理</h2>
+                            
+                            <div id="add-subject-ui" style="margin: 15px 0; padding: 10px; background: #f9f9f9; border-radius: 8px; text-align: left;">
+                                <p style="font-size: 0.9rem; font-weight: bold; margin-bottom: 8px;">新しい教科を追加</p>
+                                <div style="display: flex; gap: 5px;">
+                                    <input type="text" id="newSubjectName" placeholder="例: 英検" style="flex: 1; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                                    <button id="addSubjectBtn" style="padding: 8px 15px; background: #0275db; color: white; border: none; border-radius: 5px; cursor: pointer;">追加</button>
+                                </div>
+                            </div>
+
+                            <hr style="border: 0; border-top: 1px solid #eee;">
+                            
+                            <p style="font-size: 0.8rem; color: #666; margin-top: 10px;">各教科の目標時間を設定（×で削除）</p>
+                            
+                            <div id="targetInputsContainer" style="max-height: 300px; overflow-y: auto; margin-top: 10px;"></div>
+
+                            <button id="saveTargetsBtn" style="margin-top:20px; width:100%; padding:12px; background:#4CAF50; color:white; border:none; border-radius:10px; cursor:pointer; font-weight:bold;">保存して反映</button>
+                        </div>
+                    </div>
+
+                    <div id="message">勉強開始！がんばれ自分！</div>
+                    <div id="timer">00:00:00</div> 
+                    
+                    <div class="button-group">
+                        <button id="toggleButton">開始</button>
+                        <button id="finishButton">終了</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-right">
+                <div id="sidebar-right">
+                    <div id="level-display-top-right">
+                        <div class="level-label">Level</div>
+                        <div id="level-value">1</div>
+                    </div>
+                    <div id="right-bar-container">
+                        <div id="gauge">
+                            <div id="gaugeText">0h 0m</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <img id="slime" src="images/スライム1.png" alt="slime">
+
+        <div id="chartModal" class="modal">
+            <div class="modal-content">
+                <span id="closeChart" style="cursor:pointer; float:right; font-size: 24px;">&times;</span>
+                
+                <h2>直近7日間の記録</h2>
+                <div style="height: 300px; position: relative; margin-bottom: 20px;">
+                    <canvas id="studyChart"></canvas>
+                </div>
+
+                <hr>
+
+                <h2>学習カレンダー</h2>
+                <div id="calendar-wrapper" style="margin-bottom: 20px;">
+                    <div id="calendar-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <button id="prevMonth">前月</button>
+                        <h3 id="calendarMonthTitle" style="margin: 0;">2026年 1月</h3>
+                        <button id="nextMonth">次月</button>
+                    </div>
+                    <div id="calendar-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; background: #eee; padding: 5px; border-radius: 8px;"></div>
+                </div>
+
+                <hr>
+        
+                <h3>過去の全履歴</h3>
+                <div id="history-container" style="text-align: left;">
+                    <ul id="history-list" style="list-style: none; padding: 0;"></ul>                
+                </div>
+            </div>
+        </div>
+
+        <div id="aiModal" class="modal">
+            <div class="modal-content" style="max-width: 600px;">
+                <span id="closeAi" style="cursor:pointer; float:right; font-size: 24px;">&times;</span>
+                <h2>AI学習プランナー</h2>
+                <p style="font-size: 0.85rem; color: #666;">これまでの学習ログと目標を分析して、あなた専用のプランを作成します。</p>
+                
+                <button id="generatePlanBtn" style="margin: 15px 0; width: 100%; padding: 12px; background: linear-gradient(135deg, #a855f7, #6366f1); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1rem;">
+                    ✨ プランを生成する
+                </button>
+
+                <div id="aiPlanResult" style="text-align: left; background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; min-height: 150px; white-space: pre-wrap; font-size: 0.95rem; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+                    「プランを生成する」ボタンを押すと、AIがアドバイスを作成します。
+                </div>
+            </div>
+        </div>
+    </div>
+
+ <script type="module" src="script.js"></script>
+</body>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBmAg0HarEY_wtcBXHBMoF1jWJOyQFHAHQ",
+    authDomain: "study-80bcf.firebaseapp.com",
+    projectId: "study-80bcf",
+    storageBucket: "study-80bcf.firebasestorage.app",
+    messagingSenderId: "270819585587",
+    appId: "1:270819585587:web:512632b242919b6631bd46",
+    measurementId: "G-HJ5DRECVRT"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+</html>
