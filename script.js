@@ -4,7 +4,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
     getAuth, 
-    signInWithRedirect,  
+    signInWithPopup,
     getRedirectResult,    
     GoogleAuthProvider, 
     signOut, 
@@ -120,11 +120,11 @@ onAuthStateChanged(auth, async (user) => {
 if (loginBtn) {
     loginBtn.onclick = async () => {
         try {
-            await setPersistence(auth, browserLocalPersistence);
-            await signInWithRedirect(auth, provider);
+            const result = await signInWithPopup(auth, provider);
+            console.log("ログイン成功:", result.user);
         } catch (error) {
-            console.error("ログイン開始エラー:", error);
-            alert(`ログイン画面への遷移に失敗しました: ${error.message}`);
+            console.error("ログインエラーの詳細:", error);
+            alert(`ログイン失敗: ${error.message} (${error.code})`);
         }
     };
 }
