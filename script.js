@@ -4,7 +4,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
     getAuth, 
-    signInWithPopup,
+    signInWithRedirect,
     getRedirectResult,    
     GoogleAuthProvider, 
     signOut, 
@@ -83,7 +83,7 @@ let currentViewDate = new Date();
 // ログイン / 認証処理
 // ===================================
 
-// リダイレクトログイン結果のチェック
+//  ページ読み込み時にリダイレクトログイン結果を取得
 getRedirectResult(auth)
     .then((result) => {
         if (result) {
@@ -95,7 +95,7 @@ getRedirectResult(auth)
         alert(`ログインエラー: ${error.message}`);
     });
 
-// ログイン状態の監視
+//  ログイン状態の監視
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         currentUser = user;
@@ -116,23 +116,11 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-// ログインボタン
+//  ログインボタン（クリックの瞬間にリダイレクト）
 if (loginBtn) {
     loginBtn.onclick = () => {
-        signInWithPopup(auth, provider)
-            .then((result) => {
-                console.log("ログイン成功:", result.user);
-            })
-            .catch((error) => {
-                console.error("ログインエラー:", error);      
-                
-                if (error.code === 'auth/popup-blocked') {
-                    alert("ポップアップがブロックされたため、画面を切り替えてログインします。");
-                    signInWithRedirect(auth, provider);
-                } else {
-                    alert(`ログイン失敗: ${error.message}`);
-                }
-            });
+        // 余計な非同期処理を挟まず、即座にリダイレクトを発動する
+        signInWithRedirect(auth, provider);
     };
 }
 
