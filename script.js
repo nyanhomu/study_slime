@@ -1,10 +1,9 @@
 // ===================================
-// 1. Firebase モジュールの読み込み & 初期化
+// Firebase モジュールの読み込み & 初期化
 // ===================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
     getAuth, 
-    signInWithPopup, 
     signInWithRedirect,  
     getRedirectResult,    
     GoogleAuthProvider, 
@@ -39,7 +38,7 @@ const provider = new GoogleAuthProvider();
 let currentUser = null; // ログイン中のユーザーオブジェクト
 
 // ===================================
-//DOM要素の取得
+// DOM要素の取得
 // ===================================
 const timeDisplay = document.getElementById("timer");
 const toggleBtn = document.getElementById("toggleButton");
@@ -79,17 +78,41 @@ let currentViewDate = new Date();
 // ===================================
 // ログイン / 認証処理
 // ===================================
+
+// リダイレクトログイン結果のチェック
 getRedirectResult(auth)
     .then((result) => {
         if (result) {
-            console.log("リダイレクトログイン成功:", result.user);
+            console.log("リダイレクトログイン完了:", result.user);
         }
     })
     .catch((error) => {
-        console.error("リダイレクトログインエラー:", error);
+        console.error("リダイレクトエラー:", error);
         alert(`ログインエラー: ${error.message}`);
     });
 
+// ログイン状態の監視
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        currentUser = user;
+        if (loginBtn) loginBtn.style.display = "none";
+        if (userInfo) userInfo.style.display = "flex";
+        if (userName) userName.textContent = user.displayName;
+        if (userIcon) userIcon.src = user.photoURL || "";
+
+        console.log("ログイン成功:", user.uid);
+        await loadUserDataFromCloud(user.uid);
+    } else {
+        currentUser = null;
+        if (loginBtn) loginBtn.style.display = "block";
+        if (userInfo) userInfo.style.display = "none";
+        
+        console.log("未ログイン状態: ローカルデータを使用します。");
+        loadUserDataFromLocal();
+    }
+});
+
+// ログインボタン
 if (loginBtn) {
     loginBtn.onclick = async () => {
         try {
@@ -101,6 +124,7 @@ if (loginBtn) {
     };
 }
 
+//  ログアウトボタン
 if (logoutBtn) {
     logoutBtn.onclick = async () => {
         try {
@@ -111,28 +135,6 @@ if (logoutBtn) {
         }
     };
 }
-
-// ログイン状態の変化を監視
-onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        currentUser = user;
-        if (loginBtn) loginBtn.style.display = "none";
-        if (userInfo) userInfo.style.display = "flex";
-        if (userName) userName.textContent = user.displayName;
-        if (userIcon) userIcon.src = user.photoURL || "";
-
-        console.log("ログイン成功:", user.uid);
-        // クラウドから最新データをロード
-        await loadUserDataFromCloud(user.uid);
-    } else {
-        currentUser = null;
-        if (loginBtn) loginBtn.style.display = "block";
-        if (userInfo) userInfo.style.display = "none";
-        
-        console.log("未ログイン状態: ローカルデータを使用します。");
-        loadUserDataFromLocal();
-    }
-});
 
 // ===================================
 // データ管理（Local & Cloud）
@@ -595,7 +597,7 @@ function updateSlimeImage() {
 }
 
 // ===================================
-//AI プランナー (Groq API)
+// AI プランナー (API 経由)
 // ===================================
 if (openAiBtn) {
     openAiBtn.onclick = () => { aiModal.style.display = "block"; };
@@ -603,7 +605,6 @@ if (openAiBtn) {
 if (closeAiBtn) {
     closeAiBtn.onclick = () => { aiModal.style.display = "none"; };
 }
-
 
 if (generatePlanBtn) {
     generatePlanBtn.onclick = async () => {
