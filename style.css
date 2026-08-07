@@ -1,4 +1,4 @@
-/* 基本設定 */
+
 body {
     margin: 0;
     padding: 0;
@@ -245,4 +245,84 @@ body {
 
 #aiPlanResult::-webkit-scrollbar-thumb:hover {
     background: #a855f7;
+}
+
+
+#auth-container {
+    display: none; 
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 100;
+    
+    width: auto;                 
+    max-width: max-content;       
+    background: transparent;      
+}
+
+#loginBtn {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+#loginBtn:hover {
+    background-color: #3367D6;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+
+#user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 6px 14px 6px 8px;
+    border-radius: 30px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+
+#user-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid #fff;
+}
+
+
+#user-name {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #333;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+#logoutBtn {
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#logoutBtn:hover {
+    background: #d32f2f;
 }
