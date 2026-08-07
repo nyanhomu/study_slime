@@ -118,14 +118,8 @@ onAuthStateChanged(auth, async (user) => {
 
 //  ログインボタン（クリックの瞬間にリダイレクト）
 if (loginBtn) {
-    loginBtn.onclick = async () => {
-        try {
-            await setPersistence(auth, browserLocalPersistence);
-            await signInWithRedirect(auth, provider);
-        } catch (error) {
-            console.error("ログイン開始エラー:", error);
-            alert(`エラー: ${error.message}`);
-        }
+    loginBtn.onclick = () => {
+        signInWithRedirect(auth, provider);
     };
 }
 
