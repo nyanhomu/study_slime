@@ -108,17 +108,22 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 if (loginBtn) {
-    loginBtn.onclick = async () => {
-        try {
-            const result = await signInWithPopup(auth, provider);
-            console.log("ポップアップログイン成功:", result.user);
-        } catch (error) {
-            console.error("ログインエラー:", error);
-            alert(`ログインに失敗しました: ${error.message}`);
-        }
-    };
+    loginBtn.addEventListener("click", () => {
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                console.log("ログイン成功:", result.user);
+            })
+            .catch((error) => {
+                console.error("ログインエラー:", error);
+                
+                if (error.code === 'auth/popup-blocked') {
+                    alert("ポップアップがブロックされました。\nブラウザの設定でポップアップを許可するか、Safari/Chromeなどの標準ブラウザで開いてみてください。");
+                } else {
+                    alert(`ログインに失敗しました: ${error.message}`);
+                }
+            });
+    });
 }
-
 
 if (logoutBtn) {
     logoutBtn.onclick = async () => {
