@@ -83,7 +83,6 @@ let currentViewDate = new Date();
 // ログイン / 認証処理
 // ===================================
 
-//  ページ読み込み時にリダイレクトログイン結果を取得
 getRedirectResult(auth)
     .then((result) => {
         if (result) {
@@ -117,18 +116,12 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 //  ログインボタン（クリックの瞬間にリダイレクト）
-import { signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
 if (loginBtn) {
-    loginBtn.onclick = async () => {
-        try {
-            await signInWithPopup(auth, provider);
-        } catch (error) {
-            console.error("ログインエラー:", error);
-            alert(`ログインエラー: ${error.message}`);
-        }
+    loginBtn.onclick = () => {
+        signInWithRedirect(auth, provider);
     };
 }
+
 //  ログアウトボタン
 if (logoutBtn) {
     logoutBtn.onclick = async () => {
