@@ -117,12 +117,18 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 //  ログインボタン（クリックの瞬間にリダイレクト）
+import { signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
 if (loginBtn) {
-    loginBtn.onclick = () => {
-        signInWithRedirect(auth, provider);
+    loginBtn.onclick = async () => {
+        try {
+            await signInWithPopup(auth, provider);
+        } catch (error) {
+            console.error("ログインエラー:", error);
+            alert(`ログインエラー: ${error.message}`);
+        }
     };
 }
-
 //  ログアウトボタン
 if (logoutBtn) {
     logoutBtn.onclick = async () => {
