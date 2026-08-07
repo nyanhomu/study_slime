@@ -7,19 +7,18 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-
 <body>
     <div id="app">
         <div class="background"></div>
         
-        <div id="auth-container" style="text-align: right; padding: 10px; position: relative; z-index: 100;">
+        <div id="auth-container" style="display: none; position: absolute; top: 15px; right: 15px; z-index: 100;">
             <div id="user-info" style="display: none; align-items: center; justify-content: flex-end; gap: 10px;">
                 <img id="user-icon" style="width: 32px; height: 32px; border-radius: 50%;">
                 <span id="user-name" style="font-weight: bold; font-size: 0.9rem;"></span>
                 <button id="logoutBtn" style="padding: 5px 10px; cursor: pointer;">ログアウト</button>
             </div>
             <button id="loginBtn" style="padding: 8px 15px; background: #4285F4; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                🔑 Googleでログイン
+                 Googleでログイン
             </button>
         </div>
 
@@ -126,7 +125,7 @@
                 <p style="font-size: 0.85rem; color: #666;">これまでの学習ログと目標を分析して、あなた専用のプランを作成します。</p>
                 
                 <button id="generatePlanBtn" style="margin: 15px 0; width: 100%; padding: 12px; background: linear-gradient(135deg, #a855f7, #6366f1); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1rem;">
-                    ✨ プランを生成する
+                    プランを生成する
                 </button>
 
                 <div id="aiPlanResult" style="text-align: left; background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; min-height: 150px; white-space: pre-wrap; font-size: 0.95rem; line-height: 1.6; max-height: 400px; overflow-y: auto;">
@@ -136,6 +135,6 @@
         </div>
     </div>
 
- <script type="module" src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
