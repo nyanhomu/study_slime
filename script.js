@@ -118,9 +118,14 @@ onAuthStateChanged(auth, async (user) => {
 
 //  ログインボタン（クリックの瞬間にリダイレクト）
 if (loginBtn) {
-    loginBtn.onclick = () => {
-        // 余計な非同期処理を挟まず、即座にリダイレクトを発動する
-        signInWithRedirect(auth, provider);
+    loginBtn.onclick = async () => {
+        try {
+            await setPersistence(auth, browserLocalPersistence);
+            await signInWithRedirect(auth, provider);
+        } catch (error) {
+            console.error("ログイン開始エラー:", error);
+            alert(`エラー: ${error.message}`);
+        }
     };
 }
 
