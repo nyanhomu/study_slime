@@ -1,11 +1,7 @@
-// ===================================
-// Firebase モジュールの読み込み & 初期化
-// ===================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
     getAuth, 
-    signInWithRedirect,
-    getRedirectResult,    
+    signInWithPopup,    
     GoogleAuthProvider, 
     signOut, 
     onAuthStateChanged,
@@ -21,7 +17,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Firebase 設定情報
-
 const firebaseConfig = {
     apiKey: "AIzaSyBmAg0HarEY_wtcBXHBMoF1jWJOyQFHAHQ",
     authDomain: "study-80bcf.firebaseapp.com", 
@@ -32,14 +27,18 @@ const firebaseConfig = {
     measurementId: "G-HJ5DRECVRT"
 };
 
-// Firebase 初期化
-
+// 初期化
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-let currentUser = null; // ログイン中のユーザーオブジェクト
+// ローカル永続化の設定
+setPersistence(auth, browserLocalPersistence).catch((error) => {
+    console.error("永続化エラー:", error);
+});
+
+let currentUser = null;
 
 // ===================================
 // DOM要素の取得
@@ -83,19 +82,12 @@ let currentViewDate = new Date();
 // ログイン / 認証処理
 // ===================================
 
-getRedirectResult(auth)
-    .then((result) => {
-        if (result) {
-            console.log("リダイレクトログイン完了:", result.user);
-        }
-    })
-    .catch((error) => {
-        console.error("リダイレクトエラー:", error);
-        alert(`ログインエラー: ${error.message}`);
-    });
-
-//  ログイン状態の監視
 onAuthStateChanged(auth, async (user) => {
+    const authContainer = document.getElementById("auth-container");
+    if (authContainer) {
+        authContainer.style.display = "block";
+    }
+
     if (user) {
         currentUser = user;
         if (loginBtn) loginBtn.style.display = "none";
@@ -115,14 +107,19 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-//  ログインボタン（クリックの瞬間にリダイレクト）
 if (loginBtn) {
-    loginBtn.onclick = () => {
-        signInWithRedirect(auth, provider);
+    loginBtn.onclick = async () => {
+        try {
+            const result = await signInWithPopup(auth, provider);
+            console.log("ポップアップログイン成功:", result.user);
+        } catch (error) {
+            console.error("ログインエラー:", error);
+            alert(`ログインに失敗しました: ${error.message}`);
+        }
     };
 }
 
-//  ログアウトボタン
+
 if (logoutBtn) {
     logoutBtn.onclick = async () => {
         try {
@@ -134,7 +131,7 @@ if (logoutBtn) {
     };
 }
 
-// ===================================
+//=================================
 // データ管理（Local & Cloud）
 // ===================================
 
